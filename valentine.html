@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will you be my Valentine? 🖤</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1e2f 0%, #2a1a3a 100%);
+      color: #f0e0ff;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.6rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 30px rgba(200,100,255,0.6);
+      animation: glow 3s ease-in-out infinite alternate;
+      z-index: 10;
+    }
+
+    .buttons {
+      position: relative;
+      display: flex;
+      gap: 8rem;
+      z-index: 10;
+    }
+
+    button {
+      font-size: 2.3rem;
+      padding: 1.4rem 4.5rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.2s;
+    }
+
+    #yes {
+      background: linear-gradient(45deg, #ff6ec7, #7873f5);
+      color: white;
+    }
+
+    #yes:hover {
+      transform: scale(1.15);
+      box-shadow: 0 15px 40px rgba(120, 115, 245, 0.5);
+    }
+
+    #no {
+      background: #3a3a5c;
+      color: #aaa;
+      position: absolute;
+      user-select: none;
+      pointer-events: auto;
+    }
+
+    #no:hover {
+      background: #2a2a44;
+    }
+
+    /* Falling soft particles */
+    .particle {
+      position: absolute;
+      font-size: 1.6rem;
+      pointer-events: none;
+      animation: fall linear infinite;
+      opacity: 0.7;
+      z-index: 5;
+    }
+
+    @keyframes fall {
+      0%   { transform: translateY(-15vh) rotate(0deg); }
+      100% { transform: translateY(115vh) rotate(1080deg); }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(200,100,255,0.4); }
+      to   { text-shadow: 0 0 40px rgba(200,100,255,0.9); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Will you be my Valentine?</h1>
+
+  <div class="buttons">
+    <button id="yes">Yes ♡</button>
+    <button id="no">No</button>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('no');
+    const yesBtn = document.getElementById('yes');
+
+    // ─── Moving NO button ────────────────────────────────
+    function escapeNo() {
+      const w = window.innerWidth - noBtn.offsetWidth - 100;
+      const h = window.innerHeight - noBtn.offsetHeight - 100;
+
+      let x = Math.random() * w;
+      let y = Math.random() * h;
+
+      x = Math.max(80, Math.min(x, w - 80));
+      y = Math.max(80, Math.min(y, h - 80));
+
+      noBtn.style.left = x + 'px';
+      noBtn.style.top  = y + 'px';
+    }
+
+    noBtn.addEventListener('mouseover', escapeNo);
+    noBtn.addEventListener('click', e => {
+      e.preventDefault();
+      escapeNo();
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!noBtn.offsetParent) return;
+      const rect = noBtn.getBoundingClientRect();
+      const dist = Math.hypot(
+        e.clientX - (rect.left + rect.width/2),
+        e.clientY - (rect.top + rect.height/2)
+      );
+      if (dist < 160) escapeNo();
+    });
+
+    // ─── Soft falling particles ──────────────────────────
+    const symbols = ['♡', '💜', '✧', '･', '°', '✶'];
+
+    function createParticle() {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+      p.style.left = Math.random() * 100 + 'vw';
+      const size = Math.random() * 1.4 + 0.6;
+      p.style.fontSize = size + 'rem';
+      const dur = Math.random() * 12 + 8;
+      p.style.animationDuration = dur + 's';
+      p.style.animationDelay = Math.random() * 6 + 's';
+
+      document.body.appendChild(p);
+
+      setTimeout(() => p.remove(), dur * 1000 + 2000);
+    }
+
+    setInterval(createParticle, 500);
+
+    // ─── YES → result screen ─────────────────────────────
+    yesBtn.addEventListener('click', () => {
+      document.body.innerHTML = `
+        <div style="
+          height:100vh;
+          background: linear-gradient(135deg, #2a1a3a 0%, #1e1e2f 100%);
+          color:#f0e0ff;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          font-family:system-ui;
+          overflow:hidden;
+          position:relative;
+        ">
+          <h1 style="
+            font-size:7rem;
+            margin:0;
+            text-shadow:0 0 50px rgba(200,100,255,0.7);
+            animation:glow 2.5s infinite alternate;
+          ">YESSSSS!!! ♡</h1>
+
+          <div style="font-size:3.4rem; margin:3rem 0; z-index:10;">
+            Soft Valentine's in Shenzhen<br>
+            <strong>7:00 PM – 12:00 AM</strong>
+          </div>
+
+          <div style="font-size:7rem; animation:glow 2s infinite alternate; z-index:10;">
+            ♡ ♡ ♡
+          </div>
+
+          <p style="font-size:2.1rem; margin-top:4rem; opacity:0.9; z-index:10;">
+            Get ready baby... it's gonna be perfect
+          </p>
+
+          <script>
+            const symbols = ['♡', '💜', '✧', '･', '°', '✶'];
+            function createParticle() {
+              const p = document.createElement('div');
+              p.className = 'particle';
+              p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+              p.style.left = Math.random() * 100 + 'vw';
+              const size = Math.random() * 1.6 + 0.8;
+              p.style.fontSize = size + 'rem';
+              const dur = Math.random() * 14 + 9;
+              p.style.animationDuration = dur + 's';
+              p.style.animationDelay = Math.random() * 5 + 's';
+              document.body.appendChild(p);
+              setTimeout(() => p.remove(), dur * 1000 + 2000);
+            }
+            setInterval(createParticle, 450);
+          </script>
+        </div>
+      `;
+    });
+  </script>
+
+</body>
+</html>
